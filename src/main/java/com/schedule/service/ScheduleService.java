@@ -16,6 +16,9 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
+    /**
+     * 일정 추가 기능
+     */
     @Transactional
     public createScheduleResponse create(createScheduleRequest request) {
         Schedule schedule = new Schedule(
@@ -33,6 +36,10 @@ public class ScheduleService {
                 schedule.getModifiedAt());
     }
 
+    /**
+     * 일정 조회 기능
+     */
+    // 단건 조회
     @Transactional(readOnly = true)
     public getScheduleResponse getOne(Long id) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalStateException("없는 일정입니다."));
@@ -45,6 +52,7 @@ public class ScheduleService {
                 schedule.getModifiedAt());
     }
 
+    // 다건 조회
     @Transactional(readOnly = true)
     public List<getScheduleResponse> getAll() {
         return scheduleRepository.findAll()
@@ -60,6 +68,7 @@ public class ScheduleService {
                 .toList();
     }
 
+    // 작성자 별 다건 조회
     @Transactional(readOnly = true)
     public List<getScheduleResponse> getAllByWriter(String writer) {
         return scheduleRepository.findAllByWriter(writer)
@@ -75,6 +84,9 @@ public class ScheduleService {
                 .toList();
     }
 
+    /**
+     * 일정 수정 기능
+     */
     @Transactional
     public updateScheduleResponse update(Long id, updateScheduleRequest request) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalStateException("없는 일정입니다."));
@@ -92,6 +104,9 @@ public class ScheduleService {
                 schedule.getModifiedAt());
     }
 
+    /**
+     * 일정 삭제 기능
+     */
     @Transactional
     public void delete(Long id) {
         boolean existence = scheduleRepository.existsById(id);

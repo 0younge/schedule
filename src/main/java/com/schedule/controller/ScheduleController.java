@@ -15,16 +15,24 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
+    /**
+     * 일정 추가API
+     */
     @PostMapping("/schedules")
     public ResponseEntity<createScheduleResponse> createSchedule(@RequestBody createScheduleRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduleService.create(request));
     }
 
+    /**
+     * 일정 조회API
+     */
+    // 단건 조회
     @GetMapping("/schedules/{id}")
     public ResponseEntity<getScheduleResponse> getOneSchedule(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getOne(id));
     }
 
+    // 전체 조회
     @GetMapping("/schedules")
     public ResponseEntity<List<getScheduleResponse>> getAllSchedule(@RequestParam(required = false) String writer) {
         if (writer != null) {
@@ -33,11 +41,17 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.getAll());
     }
 
+    /**
+     * 일정 수정API
+     */
     @PutMapping("/schedules/{id}")
     public ResponseEntity<updateScheduleResponse> updateSchedule(@PathVariable Long id, @RequestBody updateScheduleRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(scheduleService.update(id, request));
     }
 
+    /**
+     * 일정 삭제API
+     */
     @DeleteMapping("/schedules/{id}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
         scheduleService.delete(id);

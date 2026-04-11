@@ -92,6 +92,7 @@ public class ScheduleService {
                 schedule.getModifiedAt());
     }
 
+    @Transactional
     public void delete(Long id) {
         boolean existence = scheduleRepository.existsById(id);
         if (!existence) {

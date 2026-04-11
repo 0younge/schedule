@@ -1,8 +1,6 @@
 package com.schedule.service;
 
-import com.schedule.dto.createScheduleRequest;
-import com.schedule.dto.createScheduleResponse;
-import com.schedule.dto.getScheduleResponse;
+import com.schedule.dto.*;
 import com.schedule.entity.Schedule;
 import com.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
@@ -77,4 +75,20 @@ public class ScheduleService {
                 .toList();
     }
 
+    @Transactional
+    public updateScheduleResponse update(Long id, updateScheduleRequest request) {
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalStateException("없는 일정입니다."));
+        if (schedule.getPassword().equals(request.getPassword())) {
+            schedule.updateSchedule(request.getTitle(), request.getWriter());
+        } else {
+            throw new IllegalArgumentException("잘못된 비밀번호 입니다,");
+        }
+        return new updateScheduleResponse(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getWriter(),
+                schedule.getCreatedAt(),
+                schedule.getModifiedAt());
+    }
 }

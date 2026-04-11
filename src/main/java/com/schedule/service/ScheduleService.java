@@ -91,4 +91,12 @@ public class ScheduleService {
                 schedule.getCreatedAt(),
                 schedule.getModifiedAt());
     }
+
+    public void delete(Long id) {
+        boolean existence = scheduleRepository.existsById(id);
+        if (!existence) {
+            throw new IllegalStateException("없는 일정입니다.");
+        }
+        scheduleRepository.deleteById(id);
+    }
 }

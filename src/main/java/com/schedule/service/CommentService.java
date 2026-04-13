@@ -29,9 +29,17 @@ public class CommentService {
         }
 
         if (request.getCommentContent() == null || request.getCommentContent().isEmpty()) {
-            throw new IllegalArgumentException("빈 값을 등록할 수 없습니다.");
+            throw new IllegalArgumentException("댓글 내용은 필수로 입력해야 합니다.");
         } else if (100 < request.getCommentContent().length()) {
             throw new IllegalArgumentException("100자 이내로 입력해야 합니다");
+        }
+
+        if (request.getCommentPassword() == null || request.getCommentPassword().isEmpty()) {
+            throw new IllegalArgumentException("비밀번호는 필수로 입력해야 합니다.");
+        }
+
+        if (request.getCommentWriter() == null || request.getCommentWriter().isEmpty()) {
+            throw new IllegalArgumentException("작성자명은 필수로 입력해야 합니다");
         }
 
         Comment comment = new Comment(request.getCommentContent(), request.getCommentWriter(), request.getCommentPassword(), id);

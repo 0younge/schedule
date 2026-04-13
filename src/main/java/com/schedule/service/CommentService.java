@@ -19,14 +19,16 @@ public class CommentService {
 
     @Transactional
     public CreateCommentResponse create(Long id, CreateCommentRequest request) {
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalStateException("없는 일정입니다."));
+        if (!scheduleRepository.existsById(id)) {
+            throw new IllegalStateException("없는 일정입니다.");
+        }
 
         int commentCount = commentRepository.countByScheduleId(id);
         if (10 <= commentCount) {
             throw new IllegalStateException("일정 당 10개까지만 댓글을 남길 수 있습니다,");
         }
 
-        Comment comment = new Comment(request.getCommentContent(), request.getCommentWriter(), request.getCommentPassword(), schedule);
+        Comment comment = new Comment(request.getCommentContent(), request.getCommentWriter(), request.getCommentPassword(), id);
         commentRepository.save(comment);
 
         return new CreateCommentResponse(

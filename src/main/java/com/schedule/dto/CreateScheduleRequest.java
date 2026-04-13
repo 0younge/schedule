@@ -3,7 +3,7 @@ package com.schedule.dto;
 import lombok.Getter;
 
 @Getter
-public class createScheduleRequest {
+public class CreateScheduleRequest {
 
     private String title;
     private String content;

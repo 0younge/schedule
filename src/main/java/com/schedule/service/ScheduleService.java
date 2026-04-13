@@ -20,14 +20,14 @@ public class ScheduleService {
      * 일정 추가 기능
      */
     @Transactional
-    public createScheduleResponse create(createScheduleRequest request) {
+    public CreateScheduleResponse create(CreateScheduleRequest request) {
         Schedule schedule = new Schedule(
                 request.getTitle(),
                 request.getContent(),
                 request.getWriter(),
                 request.getPassword());
         scheduleRepository.save(schedule);
-        return new createScheduleResponse(
+        return new CreateScheduleResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),
@@ -41,9 +41,9 @@ public class ScheduleService {
      */
     // 단건 조회
     @Transactional(readOnly = true)
-    public getScheduleResponse getOne(Long id) {
+    public GetScheduleResponse getOne(Long id) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalStateException("없는 일정입니다."));
-        return new getScheduleResponse(
+        return new GetScheduleResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),
@@ -54,11 +54,11 @@ public class ScheduleService {
 
     // 다건 조회
     @Transactional(readOnly = true)
-    public List<getScheduleResponse> getAll() {
+    public List<GetScheduleResponse> getAll() {
         return scheduleRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparing(Schedule::getCreatedAt).reversed())
-                .map(schedule -> new getScheduleResponse(
+                .map(schedule -> new GetScheduleResponse(
                         schedule.getId(),
                         schedule.getTitle(),
                         schedule.getContent(),
@@ -70,11 +70,11 @@ public class ScheduleService {
 
     // 작성자 별 다건 조회
     @Transactional(readOnly = true)
-    public List<getScheduleResponse> getAllByWriter(String writer) {
+    public List<GetScheduleResponse> getAllByWriter(String writer) {
         return scheduleRepository.findAllByWriter(writer)
                 .stream()
                 .sorted(Comparator.comparing(Schedule::getCreatedAt).reversed())
-                .map(schedule -> new getScheduleResponse(
+                .map(schedule -> new GetScheduleResponse(
                         schedule.getId(),
                         schedule.getTitle(),
                         schedule.getContent(),
@@ -88,14 +88,14 @@ public class ScheduleService {
      * 일정 수정 기능
      */
     @Transactional
-    public updateScheduleResponse update(Long id, updateScheduleRequest request) {
+    public UpdateScheduleResponse update(Long id, UpdateScheduleRequest request) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalStateException("없는 일정입니다."));
         if (schedule.getPassword().equals(request.getPassword())) {
             schedule.updateSchedule(request.getTitle(), request.getWriter());
         } else {
             throw new IllegalArgumentException("잘못된 비밀번호 입니다,");
         }
-        return new updateScheduleResponse(
+        return new UpdateScheduleResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),

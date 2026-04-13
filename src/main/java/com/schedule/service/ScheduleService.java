@@ -1,7 +1,9 @@
 package com.schedule.service;
 
 import com.schedule.dto.*;
+import com.schedule.entity.Comment;
 import com.schedule.entity.Schedule;
+import com.schedule.repository.CommentRepository;
 import com.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
 
     /**
      * 일정 추가 기능
@@ -41,15 +44,27 @@ public class ScheduleService {
      */
     // 단건 조회
     @Transactional(readOnly = true)
-    public GetScheduleResponse getOne(Long id) {
+    public GetOneScheduleResponse getOne(Long id) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalStateException("없는 일정입니다."));
-        return new GetScheduleResponse(
+
+        List<GetCommentResponse> comments = commentRepository.findAllByScheduleId(id)
+                .stream()
+                .map(comment -> new GetCommentResponse(
+                        comment.getCommentId(),
+                        comment.getCommentContent(),
+                        comment.getCommentWriter(),
+                        comment.getCreatedAt(),
+                        comment.getModifiedAt()))
+                .toList();
+
+        return new GetOneScheduleResponse(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),
                 schedule.getWriter(),
                 schedule.getCreatedAt(),
-                schedule.getModifiedAt());
+                schedule.getModifiedAt(),
+                comments);
     }
 
     // 다건 조회
@@ -110,8 +125,11 @@ public class ScheduleService {
     @Transactional
     public void delete(Long id) {
         boolean existence = scheduleRepository.existsById(id);
+        boolean commentsExistence = commentRepository.findAllByScheduleId(id).isEmpty();
         if (!existence) {
             throw new IllegalStateException("없는 일정입니다.");
+        } else if (!commentsExistence) {
+            throw new IllegalArgumentException("댓글이 있는 일정은 삭제할 수 없습니다.");
         }
         scheduleRepository.deleteById(id);
     }

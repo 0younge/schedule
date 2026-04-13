@@ -316,3 +316,13 @@ src/main/java/com/schedule/
     "modifiedAt": "2026-04-13T16:40:49.6554589"
 }
 ```
+
+---
+
+#### Q1. 3 Layer Architecture(Controller, Service, Repository)를 적절히 적용했는지 확인해 보고, 왜 이러한 구조가 필요한지 작성해 주세요.
+
+a. 각 레이어의 책임 분리, 유지보수/확장에 유리 
+
+#### Q2. @RequestParam, @PathVariable, @RequestBody가 각각 어떤 어노테이션인지, 어떤 특징을 갖고 있는지 작성해 주세요.
+
+a. requsetparam = url의 쿼리스트링에서 값을 가져옴, pathvariable = url자체에서 값을 가져옴, requestbody = http요청의 body에서 json데이터를 꺼내 객체로 가져옴

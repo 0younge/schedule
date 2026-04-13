@@ -24,6 +24,27 @@ public class ScheduleService {
      */
     @Transactional
     public CreateScheduleResponse create(CreateScheduleRequest request) {
+
+        if (request.getTitle() == null || request.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("제목은 필수로 입력해야합니다.");
+        } else if (30 < request.getTitle().length()) {
+            throw new IllegalArgumentException("제목은 30자 이내로 작성해야 합니다");
+        }
+
+        if (request.getContent() == null || request.getContent().isEmpty()) {
+            throw new IllegalArgumentException("내용은 필수로 입력해야합니다.");
+        } else if (100 < request.getContent().length()) {
+            throw new IllegalArgumentException("내용은 100자 이내로 작성해야 합니다");
+        }
+
+        if (request.getPassword() == null || request.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("비밀번호는 필수로 입력해야합니다.");
+        }
+
+        if (request.getWriter() == null || request.getWriter().isEmpty()) {
+            throw new IllegalArgumentException("작성자명은 필수로 입력해야합니다.");
+        }
+
         Schedule schedule = new Schedule(
                 request.getTitle(),
                 request.getContent(),
@@ -105,6 +126,21 @@ public class ScheduleService {
     @Transactional
     public UpdateScheduleResponse update(Long id, UpdateScheduleRequest request) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new IllegalStateException("없는 일정입니다."));
+
+        if (request.getTitle() == null || request.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("제목은 필수로 입력해야합니다.");
+        } else if (30 < request.getTitle().length()) {
+            throw new IllegalArgumentException("제목은 30자 이내로 작성해야 합니다");
+        }
+
+        if (request.getPassword() == null || request.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("비밀번호는 필수로 입력해야합니다.");
+        }
+
+        if (request.getWriter() == null || request.getWriter().isEmpty()) {
+            throw new IllegalArgumentException("작성자명은 필수로 입력해야합니다.");
+        }
+
         if (schedule.getPassword().equals(request.getPassword())) {
             schedule.updateSchedule(request.getTitle(), request.getWriter());
         } else {

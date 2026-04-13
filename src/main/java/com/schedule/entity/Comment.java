@@ -18,9 +18,14 @@ public class Comment extends BaseEntity{
     private String commentWriter;
     private String commentPassword;
 
-    public Comment(String commentContent, String commentWriter, String commentPassword) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", nullable = false)
+    private Schedule schedule;
+
+    public Comment(String commentContent, String commentWriter, String commentPassword, Schedule schedule) {
         this.commentContent = commentContent;
         this.commentWriter = commentWriter;
         this.commentPassword = commentPassword;
+        this.schedule = schedule;
     }
 }
